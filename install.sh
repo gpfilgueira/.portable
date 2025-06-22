@@ -58,11 +58,24 @@ case "$TOOL" in
 
   bash)
     echo "Installing bash config..."
-    for file in bashrc profile inputrc aliases; do
-        src="$DOTFILES_DIR/bash/$file"
-        dest="$HOME/.$file"
-        [ -f "$src" ] && link_with_backup "$src" "$dest"
-    done
+
+    # 1. Backup current .bashrc
+    if [ -f "$HOME/.bashrc" ]; then
+        echo "Backing up ~/.bashrc → $BACKUP_DIR/bashrc.bak"
+        cp -f "$HOME/.bashrc" "$BACKUP_DIR/bashrc.bak"
+    fi
+
+    # 2. Symlink portable bashrc into ~/.bash-config/bashrc.portable
+    mkdir -p "$HOME/.bash-config"
+    link_with_backup "$DOTFILES_DIR/bash/bashrc" "$HOME/.bash-config/bashrc.portable"
+
+    # 3. Add source line to .bashrc if not already present
+    if ! grep -Fxq 'source "$HOME/.bash-config/bashrc.portable"' "$HOME/.bashrc"; then
+        echo 'source "$HOME/.bash-config/bashrc.portable"' >> "$HOME/.bashrc"
+        echo "Added source line to ~/.bashrc"
+    else
+        echo "Source line already present in ~/.bashrc"
+    fi
     ;;
 
   git)
