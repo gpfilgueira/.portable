@@ -4,35 +4,35 @@
 
 " Detect if running original Vi (no :set support)
 if !exists(':set')
-  " ===== Vi minimal config =====
-  " Only basic options supported by original Vi:
+    " ===== Vi minimal config =====
+    " Only basic options supported by original Vi:
 
-  " Enable line numbers (if supported)
-  if exists('&number')
-    set number
-  endif
+    " Enable line numbers (if supported)
+    if exists('&number')
+        set number
+    endif
 
-  " Tabs and indentation
-  set tabstop=4
-  set shiftwidth=4
-  set autoindent
+    " Tabs and indentation
+    set tabstop=4
+    set shiftwidth=4
+    set autoindent
 
-  " Basic search settings
-  set ignorecase
+    " Basic search settings
+    set ignorecase
 
-  " Visible bell instead of beep
-  set vb
+    " Visible bell instead of beep
+    set vb
 
-  " Fallback minimal status line (if supported)
-  set laststatus=2
+    " Fallback minimal status line (if supported)
+    set laststatus=2
 
-  " Disable compatibility if possible
-  if exists(':set')
-    set nocompatible
-  endif
+    " Disable compatibility if possible
+    if exists(':set')
+        set nocompatible
+    endif
 
-  " End of Vi minimal config
-  finish
+    " End of Vi minimal config
+    finish
 endif
 
 " ===== Vim / Neovim full config =====
@@ -84,15 +84,15 @@ if exists('&termguicolors') | set termguicolors | endif
 
 " Clipboard (if available)
 if has('clipboard')
-  set clipboard=unnamedplus
-  if !has('nvim') | set clipboard+=unnamed | endif
+    set clipboard=unnamedplus
+    if !has('nvim') | set clipboard+=unnamed | endif
 endif
 
 " Persistent undo (if supported)
 if exists('&undofile')
-  silent! call mkdir('~/.vi/undodir', 'p')
-  set undodir=~/.vi/undodir
-  set undofile
+    silent! call mkdir(expand('~/.vi/undodir'), 'p')
+    set undodir=~/.vi/undodir
+    set undofile
 endif
 
 " Mouse (if supported)
@@ -132,7 +132,7 @@ nnoremap <S-Tab> :bprevious<CR>
 
 " Explorer (only if netrw is available)
 if exists(':Lex')
-  nnoremap <leader>e :w<CR>:25Lex<CR>
+    nnoremap <leader>e :w<CR>:25Lex<CR>
 endif
 
 " Select all
@@ -140,13 +140,13 @@ nnoremap <Leader>a ggVG
 
 " Clipboard mappings (if supported)
 if has('clipboard') || has('unnamedplus')
-  nnoremap <silent> <Leader>y "+y
-  vnoremap <silent> <Leader>y "+y
-  nnoremap <silent> <Leader>Y "+Y
-  nnoremap <silent> <Leader>A ggVG"+y
+    nnoremap <silent> <Leader>y "+y
+    vnoremap <silent> <Leader>y "+y
+    nnoremap <silent> <Leader>Y "+Y
+    nnoremap <silent> <Leader>A ggVG"+y
 else
-  nnoremap <Leader>y :echo "Clipboard not supported in this environment"<CR>
-  nnoremap <Leader>Y :echo "Clipboard not supported in this environment"<CR>
+    nnoremap <Leader>y :echo "Clipboard not supported in this environment"<CR>
+    nnoremap <Leader>Y :echo "Clipboard not supported in this environment"<CR>
 endif
 
 " Delete without yanking
@@ -159,8 +159,8 @@ nnoremap <Leader>B O<Esc>xj
 
 " Visual mode line moving
 if exists(':vnoremap')
-  vnoremap J :m '>+1<CR>gv=gv
-  vnoremap K :m '<-2<CR>gv=gv
+    vnoremap J :m '>+1<CR>gv=gv
+    vnoremap K :m '<-2<CR>gv=gv
 endif
 
 " Center search matches
@@ -174,10 +174,10 @@ nnoremap <C-u> <C-u>zz
 
 " Quickfix/location list navigation
 if exists(':cnext')
-  nnoremap <C-k> :cnext<CR>zz
-  nnoremap <C-j> :cprev<CR>zz
-  nnoremap <Leader>k :lnext<CR>zz
-  nnoremap <Leader>j :lprev<CR>zz
+    nnoremap <C-k> :cnext<CR>zz
+    nnoremap <C-j> :cprev<CR>zz
+    nnoremap <Leader>k :lnext<CR>zz
+    nnoremap <Leader>j :lprev<CR>zz
 endif
 
 " Search/replace
@@ -200,12 +200,12 @@ inoremap /* /**/<left><left>
 " ----------------------
 
 function! LoadPlugins()
-  let l:plugins_file = expand('~/.vi/plugins.vim')
-  if filereadable(l:plugins_file)
-    execute 'source' l:plugins_file
-  else
-    echo "Plugins file not found. Continuing without plugins."
-  endif
+    let l:plugins_file = expand('~/.vi/plugins.vim')
+    if filereadable(l:plugins_file)
+        execute 'source' l:plugins_file
+    else
+        echo "Plugins file not found. Continuing without plugins."
+    endif
 endfunction
 
 call LoadPlugins()
