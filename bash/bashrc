@@ -1,0 +1,139 @@
+# ~/.bashrc
+
+##### Enable programmable completion #####
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+
+
+# ~/.bash-config/env.sh
+
+##### Core Environment #####
+export EDITOR="vim"
+export VISUAL="vim"
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
+shopt -s checkwinsize  # Update window size after each command
+
+
+# ~/.bash-config/dircolors
+
+##### Directory Colors #####
+if [ -x /usr/bin/dircolors ]; then
+  test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+fi
+
+
+# ~/.bash-config/binds.sh
+
+##### Keyboard Bindings #####
+# Alt+q → clear
+bind '"\eq": "\e\C-l"'
+
+
+# ~/.bash-config/functions
+
+##### Functions #####
+# Create directory and cd into it
+mkcd() {
+  mkdir -p "$1" && cd "$1"
+}
+
+
+# ~/.bash-config/history
+
+##### History Behavior #####
+HISTCONTROL=ignoreboth
+shopt -s histappend
+HISTSIZE=1000
+HISTFILESIZE=2000
+
+
+# ~/.bash-config/aliases
+
+##### Core Aliases #####
+alias func='declare -f'
+alias tm='tmux'
+
+# Shell behavior shortcuts
+alias sb='source ~/.bashrc && source ~/.bash-config/*'
+
+# Grep with colors
+alias grep='grep --color=auto'
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+
+# LS with colors
+alias ls='ls --color=auto'
+alias ll='ls -alF --color=auto'
+alias la='ls -A --color=auto'
+alias l='ls -CF --color=auto'
+
+# Directory navigation
+alias ..='cd ..'
+alias ...='cd ../..'
+alias .3='cd ../../..'
+alias .4='cd ../../../..'
+alias .5='cd ../../../../..'
+
+# Disk usage
+if command -v dust >/dev/null 2>&1; then
+  alias du='dust'
+else
+  alias du='du -h'
+fi
+alias df='df -h'
+
+# Safer deletions
+alias rm='rm -i'
+alias rmdir='rmdir --ignore-fail-on-non-empty'
+
+# Count visible files
+alias count='la | wc -l'
+
+# fd-related (with fallback)
+if command -v fdfind >/dev/null 2>&1; then
+  alias fd='fdfind'
+else
+  alias fd='fd'
+fi
+alias fdd='fd -t d'
+alias fdf='fd -t f'
+
+# System utilities
+alias dir='dir --color=auto'
+alias vdir='vdir --color=auto'
+alias psg='ps aux | grep -v grep | less'
+alias now='date +"%Y-%m-%d %H:%M:%S"'
+
+##### Git Shortcuts #####
+alias gs='git status'
+alias gau='git add -u'
+alias ga.='git add .'
+alias gaa='git add -A'
+alias gbranch='git branch'
+alias gcheckout='git checkout'
+alias gclone='git clone'
+alias gcommit='git commit -m'
+alias gfetch='git fetch'
+alias gpull='git pull origin'
+alias gpush='git push origin'
+alias gtag='git tag'
+alias gnewtag='git tag -a'
+alias glog='git log --oneline --graph --decorate --all'
+alias gdiff='git diff'
+alias gundo='git reset --soft HEAD~1'
+
+##### Tmux Shortcuts #####
+alias tl='tmux ls'
+alias tkserver='tmux kill-server'
+alias tksession='tmux kill-session'
+
+##### Miscellaneous #####
+alias hgrep='history | grep'
+alias lagrep='ls -A --color=auto | grep'
+alias llgrep='ls -alF --color=auto | grep'
