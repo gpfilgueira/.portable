@@ -1,0 +1,67 @@
+# --- General behavior ---
+startup_message off              # No startup banner
+defscrollback 5000              # scrollback buffer
+altscreen on                    # allow alternate screen (for vim, etc.)
+
+# --- Status bar ---
+hardstatus off
+hardstatus alwayslastline
+hardstatus string '%{= kG}[%H] %{= kw}%-w%{= kG}%n %t%{-}%+w %=%{= kY} %d/%m %c'
+
+# --- Enable mouse scroll (if supported) ---
+termcapinfo xterm* ti@:te@
+
+# --- Splits and window navigation ---
+
+# Easier pane splitting
+bind | split -v   # Vertical split
+bind - split      # Horizontal split
+
+# Focus movement (Vim style)
+bind h focus left
+bind j focus down
+bind k focus up
+bind l focus right
+
+# Kill current region
+bind x remove
+
+# Switch between regions (Ctrl-w like in vim)
+bind ^w focus
+
+# Resize regions (Ctrl+arrow)
+bindkey "^[[1;5D" resize -h -5  # Ctrl + Left
+bindkey "^[[1;5C" resize -h +5  # Ctrl + Right
+bindkey "^[[1;5A" resize -v -2  # Ctrl + Up
+bindkey "^[[1;5B" resize -v +2  # Ctrl + Down
+
+# --- Window (tab) navigation ---
+
+# Create new window (tab)
+bind c screen
+
+# Rename current window
+bind r title
+
+# Or use number bindings
+bindkey -k 1 select 1
+bindkey -k 2 select 2
+bindkey -k 3 select 3
+bindkey -k 4 select 4
+bindkey -k 5 select 5
+bindkey -k 6 select 6
+bindkey -k 7 select 7
+bindkey -k 8 select 8
+bindkey -k 9 select 9
+bindkey -k 0 select 0
+
+# Toggle between last two windows
+bind ^A lastmsg
+
+# --- Misc usability ---
+vbell off              # disable visual bell
+bell_msg "Bell triggered in %n (%t)"
+
+# Rebind screen's escape from Ctrl-a to Ctrl-b (tmux-like)
+escape ^Bb
+

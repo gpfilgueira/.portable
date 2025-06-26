@@ -8,6 +8,18 @@ BACKUP_DIR="${HOME}/.bakconf"
 # Ensure backup dir exists
 mkdir -p "$BACKUP_DIR"
 
+# Backup local config
+backup_file() {
+    local file="$1"
+    local name
+    name=$(basename "$file")
+
+    if [ -f "$file" ]; then
+        echo "Backing up $file → $BACKUP_DIR/$name.bak"
+        cp -f "$file" "$BACKUP_DIR/$name.bak"
+    fi
+}
+
 # Helper: backup + symlink
 link_with_backup() {
     local src="$1"
@@ -39,14 +51,11 @@ case "$TOOL" in
   vim)
     echo "Installing Vim/Neovim config..."
 
-    # ~/.vimrc → core.vim
     link_with_backup "$DOTFILES_DIR/vim/core.vim" "$HOME/.vimrc"
 
-    # ~/.config/nvim/init.vim → core.vim
     mkdir -p "$HOME/.config/nvim"
     link_with_backup "$DOTFILES_DIR/vim/core.vim" "$HOME/.config/nvim/init.vim"
 
-    # ~/.vi/plugins.vim → plugins.vim
     mkdir -p "$HOME/.vi"
     link_with_backup "$DOTFILES_DIR/vim/plugins.vim" "$HOME/.vi/plugins.vim"
     ;;
@@ -59,17 +68,13 @@ case "$TOOL" in
   bash)
     echo "Installing bash config..."
 
-    # 1. Backup current .bashrc
-    if [ -f "$HOME/.bashrc" ]; then
-        echo "Backing up ~/.bashrc → $BACKUP_DIR/bashrc.bak"
-        cp -f "$HOME/.bashrc" "$BACKUP_DIR/bashrc.bak"
-    fi
+    # Backup .bashrc before modifying it
+    backup_file "$HOME/.bashrc"
 
-    # 2. Symlink portable bashrc into ~/.bash-config/bashrc.portable
     mkdir -p "$HOME/.bash-config"
     link_with_backup "$DOTFILES_DIR/bash/bashrc" "$HOME/.bash-config/bashrc.portable"
 
-    # 3. Add source line to .bashrc if not already present
+    # Add source line if missing
     if ! grep -Fxq 'source "$HOME/.bash-config/bashrc.portable"' "$HOME/.bashrc"; then
         echo 'source "$HOME/.bash-config/bashrc.portable"' >> "$HOME/.bashrc"
         echo "Added source line to ~/.bashrc"
@@ -83,12 +88,20 @@ case "$TOOL" in
     link_with_backup "$DOTFILES_DIR/git/gitconfig" "$HOME/.gitconfig"
     ;;
 
+  screen)
+    echo "Installing screen config..."
+
+    backup_file "$HOME/.screenrc"
+    link_with_backup "$DOTFILES_DIR/screen/screenrc" "$HOME/.screenrc"
+    ;;
+
   all)
     echo "Installing all configs..."
     "$0" vim
     "$0" tmux
     "$0" bash
     "$0" git
+    "$0" screen
     ;;
 
   *)
