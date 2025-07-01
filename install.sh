@@ -8,7 +8,7 @@ BACKUP_DIR="${HOME}/.bakconf"
 # Ensure backup dir exists
 mkdir -p "$BACKUP_DIR"
 
-# Backup local config
+# Helper: backup existing config file
 backup_file() {
     local file="$1"
     local name
@@ -38,7 +38,7 @@ link_with_backup() {
 
 # Helper: error and usage
 usage() {
-    echo "Usage: $0 [vim|tmux|bash|git|all]"
+    echo "Usage: $0 [vim|tmux|bash|git|screen|all]"
     exit 1
 }
 
@@ -62,19 +62,19 @@ case "$TOOL" in
 
   tmux)
     echo "Installing tmux config..."
+
+    backup_file "$HOME/.tmux.conf"
     link_with_backup "$DOTFILES_DIR/tmux/tmux.conf" "$HOME/.tmux.conf"
     ;;
 
   bash)
     echo "Installing bash config..."
 
-    # Backup .bashrc before modifying it
     backup_file "$HOME/.bashrc"
 
     mkdir -p "$HOME/.bash-config"
     link_with_backup "$DOTFILES_DIR/bash/bashrc" "$HOME/.bash-config/bashrc.portable"
 
-    # Add source line if missing
     if ! grep -Fxq 'source "$HOME/.bash-config/bashrc.portable"' "$HOME/.bashrc"; then
         echo 'source "$HOME/.bash-config/bashrc.portable"' >> "$HOME/.bashrc"
         echo "Added source line to ~/.bashrc"
